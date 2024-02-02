@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 
-function Add({items, setItems, storeData}) {
+function Add({ items, setItems, storeData }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 

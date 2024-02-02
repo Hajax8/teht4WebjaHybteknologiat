@@ -5,7 +5,7 @@ import { DATA } from './Data';
 import Row from './comps/Row';
 import Search from './comps/Search';
 import Add from './comps/Add';
-import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const STORAGE_KEY = '@persons_key'
 
@@ -15,13 +15,12 @@ export default function App() {
 
   const getData = async () => {
     try{
-      const value = await useAsyncStorage.getItem(STORAGE_KEY)
+      const value = await AsyncStorage.getItem(STORAGE_KEY)
       console.log('get');
       const json = JSON.parse(value)
       if (json === null) {
         json = []
       }
-      console.log(json);
       setItems(json)
     } catch (ex) {
       console.log(ex);
@@ -32,18 +31,19 @@ export default function App() {
     getData()
   }, []);
 
-  const storeData = async () => {
+  const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      console.log('store');
       await AsyncStorage.setItem(STORAGE_KEY, jsonValue)
+      console.log('store');
     } catch (ex) {
       console.log(ex);
     }
   }
 
   const executeSearch = (search) => {
-    const searchArray = DATA.filter((item) => item.lastname.startsWith(search))
+    console.log(items);
+    const searchArray = items.filter((item) => item.lastname.startsWith(search))
     setItems(searchArray)
   }
   const select = (id) => {
