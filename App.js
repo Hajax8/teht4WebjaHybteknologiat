@@ -1,20 +1,46 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, FlatListComponent, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants'
 import { DATA } from './Data';
 import Row from './comps/Row';
 import Search from './comps/Search';
 import Add from './comps/Add';
+import AsyncStorage, { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
+const STORAGE_KEY = '@persons_key'
 
 export default function App() {
   const [items, setItems] = useState([]);
   const [selectID, setSelectID] = useState(null);
 
+  const getData = async () => {
+    try{
+      const value = await useAsyncStorage.getItem(STORAGE_KEY)
+      console.log('get');
+      const json = JSON.parse(value)
+      if (json === null) {
+        json = []
+      }
+      console.log(json);
+      setItems(json)
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   useEffect(() => {
-    setItems(DATA)
+    getData()
   }, []);
+
+  const storeData = async () => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      console.log('store');
+      await AsyncStorage.setItem(STORAGE_KEY, jsonValue)
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
 
   const executeSearch = (search) => {
     const searchArray = DATA.filter((item) => item.lastname.startsWith(search))
@@ -27,7 +53,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Search executeSearch={executeSearch} />
-      <Add items = {items} setItems = {setItems}/>
+      <Add items = {items} setItems = {setItems} storeData = {storeData}/>
       <FlatList
         data={items}
         keyExtractor={(item) => item.id}

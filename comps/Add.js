@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 
-function Add(items, setItems) {
+function Add({items, setItems, storeData}) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
@@ -11,10 +11,8 @@ function Add(items, setItems) {
             lastname: lastName,
             firstname: firstName,
         }
-        console.log('error');
         const tempItems = [...items, newPerson];
-        console.log('error2');
-
+        storeData(tempItems)
         setItems(tempItems)
         setFirstName('')
         setLastName('')
